@@ -6,18 +6,16 @@ var methodOverride = require('method-override');
 var hostname = process.env.HOSTNAME || 'localhost';
 var port = 8080;
 
-var db = require('mongoskin').db('mongodb://user:pwd@127.0.0.1:27017/imagedb');
+var db = require('mongoskin').db('mongodb://user:pwd@127.0.0.1:27017/tododb');
 
 server.get("/", function (req, res) {
       res.redirect("/index.html");
 });
 
-
-var imageList = [];
-
+var todoList = [];
 
 
-server.get("/addImage", function (req, res) {
+server.get("/addTodo", function (req, res) {
   db.collection("data").insert(req.query, function(err, result){
       if(err){
         res.send("error");
@@ -32,8 +30,13 @@ server.get("/addImage", function (req, res) {
    // res.send(JSON.stringify(todoList));
 });
 
+server.get("/editTodo"), function (req, res) {
+db.collection("data").
 
-server.get("/deleteImage", function (req, res) {
+}
+
+
+server.get("/deleteTodo", function (req, res) {
    //var id = parseInt(req.query.id);
    var id = req.query.id.toString();
    console.log(id);
@@ -48,8 +51,6 @@ server.get("/deleteImage", function (req, res) {
         });
       }
    });
-   // res.send(JSON.stringify(todoList));
-   // todoList.splice(index,1);
 });
 
 server.get("/getTodos", function (req, res) {
@@ -57,7 +58,6 @@ server.get("/getTodos", function (req, res) {
     res.send(JSON.stringify(result));
   });
 
-   // res.send(JSON.stringify(todoList));
 });
 
 server.use(methodOverride());

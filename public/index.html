@@ -4,43 +4,55 @@
   <script src='asyncReq.js'> </script>
   <script>
     function addNew(){
-      var image = prompt("Ender New Image:");
+      var todo = prompt("Enter New Image url:");
+      var description = prompt("Image description");
       var id = new Date().getTime();
-      var url = "./addImage" + "?id=" + id + "&todo=" + image;
+      var url = "./addTodo" + "?id=" + id + "&todo=" + todo + "&imagedes=" + description;
       loadFile(url ,function(d){
-        formatImages(JSON.parse(d));
+        formatTodos(JSON.parse(d));
       });
     }
-    function deleteImage(index){
+    function deleteTodo(index){
       var flag = confirm("Are you sure you want to delete?");
       if(flag){
-        var url = "./deleteImage" + "?id=" + index;
+        var url = "./deleteTodo" + "?id=" + index;
         loadFile(url ,function(d){
-          formatImages(JSON.parse(d));
+          formatTodos(JSON.parse(d));
         });
       }
     }
-    function formatImages(list)
+    function editTodo(index) {
+      var flag = prompt("new description?");
+      if(flag)
+      {
+        var url = "./editTodo" + "&imagedes=" + description;
+        loadFile(url, function(d) {
+          formatTodos(JSON.parse(d));
+        });
+      }
+}
+
+    function formatTodos(list)
     {
       var markup = "";
       if(list.length == 0){
-        markup = "No images yet"
+        markup = "No Images Yet"
       }
       else{
         for(var i = 0; i < list.length; i++){
-          markup += "<li>" + list[i].image +
-            "<button class='delButton' onclick='deleteImage(" + list[i].id + ")'> X </button>"+
+          markup += "<li> <div class='thumb' style='background-image:url(" + list[i].todo + ")'> </div>"+
+            "<button class='delButton' onclick='deleteTodo(" + list[i].id + ")'> X </button>" +
+            "<button class='editButton' onclick='editTodo(" + list[i].id + ")'> Edit </button>" + "<div class='desc' style='description:url(" + list[i].description + ")'> </div>" +
             "</li>";
         }
       }
-      document.getElementById("imageWrapper").innerHTML = markup;
+      document.getElementById("todoListWrapper").innerHTML = markup;
     }
     function start()
     {
-      var url = "./getImages";
+      var url = "./getTodos";
       loadFile(url ,function(d){
-        console.log(d);
-        formatImages(JSON.parse(d));
+        formatTodos(JSON.parse(d));
       })
     }
   </script>
@@ -58,13 +70,30 @@
       {
           float: right;
       }
+      .editButton
+      {
+        float: right;
+      }
+      .thumb{
+        display: inline-block;
+        height: 240px;
+        width: 240px;
+        background-position: 50%;
+        background-size: cover;
+      }
+      .desc
+      {
+        float: right;
+        text-align: right;
+      }
   </style>
 </head>
 
 <body onload='start()'>
-  <h1> Todos </h1>
+  <h1> My Image Collection </h1>
   <button id='addButton' onclick='addNew()'> Add </button>
-  <ol id='imageWrapper'> </ol>
+  <ol id='todoListWrapper'> </ol>
+  <div id='details'></div>
 </body>
 
 </html>
