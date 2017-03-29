@@ -12,7 +12,9 @@ server.get("/", function (req, res) {
       res.redirect("/index.html");
 });
 
+
 var todoList = [];
+
 
 
 server.get("/addTodo", function (req, res) {
@@ -30,11 +32,6 @@ server.get("/addTodo", function (req, res) {
    // res.send(JSON.stringify(todoList));
 });
 
-server.get("/editTodo"), function (req, res) {
-db.collection("data").
-
-}
-
 
 server.get("/deleteTodo", function (req, res) {
    //var id = parseInt(req.query.id);
@@ -51,13 +48,21 @@ server.get("/deleteTodo", function (req, res) {
         });
       }
    });
+   // res.send(JSON.stringify(todoList));
+   // todoList.splice(index,1);
 });
 
 server.get("/getTodos", function (req, res) {
   db.collection("data").find({}).toArray( function(err, result) {
     res.send(JSON.stringify(result));
   });
+});
 
+server.get("/getTodo", function (req, res) {
+  var id = req.query.id.toString();
+  db.collection("data").findOne({id:id}, function(err, result) {
+    res.send(JSON.stringify(result));
+  });
 });
 
 server.use(methodOverride());
